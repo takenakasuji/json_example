@@ -2,6 +2,8 @@ package json_example
 
 import (
 	"testing"
+
+	"github.com/koron/go-dproxy"
 )
 
 func TestUnmarshalByInterface(t *testing.T) {
@@ -25,4 +27,8 @@ func TestUnmarshalByInterface(t *testing.T) {
 	if c != "Laptop" {
 		t.Error("UnmarshalByInterface(): Category failed")
 	}
+}
+
+func TestUnmarshalByDproxy(t *testing.T) {
+
 }
