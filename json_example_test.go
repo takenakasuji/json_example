@@ -8,8 +8,8 @@ import (
 
 func TestUnmarshalByInterface(t *testing.T) {
 	var jsonBlob = []byte(`[
-		{"ProductName": "Mac", "Amount": 1, "Info": {"Category": "Laptop"}},
-		{"ProductName": "iPhone",    "Amount": 2, "Info": {"Category": "SmartPhone"}}
+		{"ProductName": "Mac", "Amount": 1, "Info": {"Category": "Laptop", "Tags": ["New", "13inch"]}},
+		{"ProductName": "iPhone",    "Amount": 2, "Info": {"Category": "SmartPhone", "Tags": ["6inch", "New"]}}
 	]`)
 	o, err := Unmarshal(jsonBlob)
 	if err != nil {
@@ -21,14 +21,41 @@ func TestUnmarshalByInterface(t *testing.T) {
 	}
 	a := o.([]interface{})[1].(map[string]interface{})["Amount"].(float64)
 	if a != 2 {
-		t.Error("UnmarshalByInterface(): ProductName failed")
+		t.Error("UnmarshalByInterface(): Amount failed")
 	}
 	c := o.([]interface{})[0].(map[string]interface{})["Info"].(map[string]interface{})["Category"].(string)
 	if c != "Laptop" {
 		t.Error("UnmarshalByInterface(): Category failed")
 	}
+	tg := o.([]interface{})[0].(map[string]interface{})["Info"].(map[string]interface{})["Tags"].([]interface{})[0].(string)
+	if tg != "New" {
+		t.Error("UnmarshalByInterface(): Tags failed")
+	}
 }
 
 func TestUnmarshalByDproxy(t *testing.T) {
-
+	var jsonBlob = []byte(`[
+		{"ProductName": "Mac", "Amount": 1, "Info": {"Category": "Laptop", "Tags": ["New", "13inch"]}},
+		{"ProductName": "iPhone",    "Amount": 2, "Info": {"Category": "SmartPhone", "Tags": ["6inch", "New"]}}
+	]`)
+	o, err := Unmarshal(jsonBlob)
+	if err != nil {
+		t.Error("TestUnmarshalByDproxy(): unmarshal failed")
+	}
+	p, _ := dproxy.New(o).A(0).M("ProductName").String()
+	if p != "Mac" {
+		t.Error("TestUnmarshalByDproxy(): ProductName failed")
+	}
+	a, _ := dproxy.New(o).A(1).M("Amount").Float64()
+	if a != 2 {
+		t.Error("TestUnmarshalByDproxy(): Amount failed")
+	}
+	c, _ := dproxy.New(o).A(0).M("Info").M("Category").String()
+	if c != "Laptop" {
+		t.Error("TestUnmarshalByDproxy(): Category failed")
+	}
+	tg, _ := dproxy.New(o).A(0).M("Info").M("Tags").A(0).String()
+	if tg != "New" {
+		t.Error("TestUnmarshalByDproxy(): Tags failed")
+	}
 }
