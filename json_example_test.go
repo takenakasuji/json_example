@@ -9,7 +9,7 @@ func TestUnmarshalByInterface(t *testing.T) {
 		{"ProductName": "Mac", "Amount": 1, "Info": {"Category": "Laptop"}},
 		{"ProductName": "iPhone",    "Amount": 2, "Info": {"Category": "SmartPhone"}}
 	]`)
-	o, err := UnmarshalByInterface(jsonBlob)
+	o, err := Unmarshal(jsonBlob)
 	if err != nil {
 		t.Error("UnmarshalByInterface(): unmarshal failed")
 	}

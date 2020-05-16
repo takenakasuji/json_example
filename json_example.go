@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func UnmarshalByInterface(b []byte) (interface{}, error) {
+func Unmarshal(b []byte) (interface{}, error) {
 	var orders interface{}
 	err := json.Unmarshal(b, &orders)
 	if err != nil {
